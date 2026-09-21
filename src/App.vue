@@ -10,10 +10,13 @@ const current = computed(() => {
   const slug = typeof route.params.slug === 'string' ? route.params.slug : route.path.split('/')[2]
   return slug ? findFeature(slug) : undefined
 })
+
+// 功能頁以 iframe 嵌入自己時（?embed=1）不顯示導覽列
+const embedded = computed(() => route.query.embed === '1')
 </script>
 
 <template>
-  <header class="navbar">
+  <header v-if="!embedded" class="navbar">
     <RouterLink to="/" class="brand">
       <span class="logo" aria-hidden="true">
         <svg viewBox="0 0 16 16">
@@ -33,7 +36,7 @@ const current = computed(() => {
       </span>
     </div>
   </header>
-  <main class="main">
+  <main class="main" :class="{ embedded }">
     <RouterView />
   </main>
 </template>
@@ -106,6 +109,10 @@ const current = computed(() => {
 .main {
   flex: 1;
   padding-bottom: 4rem;
+}
+
+.main.embedded {
+  padding-bottom: 0;
 }
 
 @media (min-width: 900px) {
