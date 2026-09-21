@@ -23,11 +23,12 @@ src/features/
 
 - `slug` 使用 kebab-case，例如 `virtual-list`、`debounced-search`。
 - 路由路徑固定為 `/features/<slug>`。
+- 功能 PRD 放 `docs/PRD-<slug>.md`（由 `/feature-spec` 產生），不放在 `src/features/<slug>/`。
 
 ## 步驟
 
 1. **確認基礎架構存在。** 若 `src/features/registry.ts` 不存在，先建立它（見下方「基礎架構」），並接上 router 與首頁。這一步只在第一次做。
-2. **釐清需求。** 從參數判斷功能與想展示的技術點。範圍太模糊時，提出 2–3 種實作方向（各自展示的技術重點不同），請使用者選一個。
+2. **釐清需求。** 先讀 `docs/PRD-<slug>.md`，存在時以其 Must 範圍為準，不額外擴充。沒有 PRD 時，從參數判斷功能與想展示的技術點。範圍太模糊時，提出 2–3 種實作方向（各自展示的技術重點不同），請使用者選一個。
 3. **檢查重複。** 讀 `src/features/*/meta.ts`，若已有相近功能，告知使用者並詢問要擴充舊的還是新建。
 4. **建立檔案。**
    - `meta.ts`：填好 `FeatureMeta`。

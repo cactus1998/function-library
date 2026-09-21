@@ -28,6 +28,8 @@ argument-hint: <feature slug>
 
 檔案位置：`src/features/<slug>/__tests__/*.test.ts`。
 
+有 `docs/PRD-<slug>.md` 時，每條 AC 與 EC 至少對應一個測試。
+
 優先順序：
 1. **Composables / 純函式**：最容易測，也最能展示邏輯正確性。涵蓋正常情況、邊界值（空陣列、0、極大值）與錯誤輸入。
 2. **元件行為**：用 `mount` 模擬使用者操作（`trigger('click')`、`setValue`），斷言畫面結果與 emit 事件。

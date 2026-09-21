@@ -57,7 +57,7 @@
 
 ### 5.2 功能展示清單
 
-各功能的細部規格在實作前以 `/feature-spec` 產生 `src/features/<slug>/SPEC.md`。以下為第一階段規劃。
+各功能的細部規格在實作前以 `/feature-spec` 產生 `docs/PRD-<slug>.md`。以下為第一階段規劃。
 
 #### 第一階段（MVP，P0）
 
@@ -97,7 +97,7 @@
 1. `meta.ts`：標題、摘要、標籤、技術重點、難度、建立日期。
 2. `index.vue`：可互動的 demo，含可調整的參數（例如資料筆數），讓面試官能自己試。
 3. `composables/`：核心邏輯與 UI 分離。
-4. `SPEC.md`：規格與 Given-When-Then 驗收標準（`/feature-spec`）。
+4. `docs/PRD-<slug>.md`：規格與 Given-When-Then 驗收標準（`/feature-spec`）。
 5. 測試：composable 單元測試與元件測試（`/add-tests`）。
 6. `NOTES.md`：面試講稿，含設計取捨、複雜度、可能被追問的問題（`/interview-notes`）。
 
@@ -125,7 +125,6 @@ src/
       index.vue
       components/
       composables/
-      SPEC.md
       NOTES.md
   router/index.ts    # 展開 featureRoutes
   views/HomeView.vue # 功能卡片列表與篩選

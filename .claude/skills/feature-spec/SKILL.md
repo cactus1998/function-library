@@ -1,12 +1,18 @@
 ---
 name: feature-spec
-description: 在實作功能展示前先寫精簡規格：目標、範圍、狀態流程、邊界情況與 Given-When-Then 驗收標準，存成 src/features/<slug>/SPEC.md，供 /new-feature 與 /add-tests 使用。使用時機：/feature-spec <功能>，或使用者說「先規劃這個功能」「寫個規格」「需求拆解」。
+description: 在實作功能展示前先寫精簡規格：目標、範圍、狀態流程、邊界情況與 Given-When-Then 驗收標準，存成 docs/PRD-<slug>.md，供 /new-feature 與 /add-tests 使用。使用時機：/feature-spec <功能>，或使用者說「先規劃這個功能」「寫個規格」「需求拆解」。
 argument-hint: <功能名稱或描述>
 ---
 
 # 功能規格
 
 規格要短：一頁內寫完，重點是讓實作與測試有明確依據。面試時也能拿來說明「我怎麼拆需求」。
+
+## 存放位置（必守）
+
+- PRD 一律寫在 `docs/PRD-<slug>.md`，並在 `docs/README.md` 的文件清單加一列。
+- 不要寫在 `src/features/<slug>/`，也不要產生 `SPEC.md`；`src/` 只放程式碼、測試與 `NOTES.md`。
+- 若發現舊的 `src/features/<slug>/SPEC.md`，用 `git mv` 搬到 `docs/PRD-<slug>.md` 再繼續。
 
 ## 原則
 
@@ -18,14 +24,14 @@ argument-hint: <功能名稱或描述>
 ## 步驟
 
 1. 確認需求，必要時提出關鍵決策問題。
-2. 決定 slug（kebab-case），寫入 `src/features/<slug>/SPEC.md`（使用下方模板）。
+2. 決定 slug（kebab-case），寫入 `docs/PRD-<slug>.md`（使用下方模板），並在 `docs/README.md` 文件清單加一列（狀態 Draft）。
 3. 有狀態轉換（載入、錯誤、重試等）時，附 Mermaid 狀態圖。
 4. 回報規格摘要，建議接著執行 `/new-feature <slug>`。
 
 ## 模板
 
 ```markdown
-# <功能名稱> 規格
+# PRD：<功能名稱>（<slug>）
 
 ## 目標
 <這個 demo 要展示什麼技術、解決什麼問題（2–3 句）>
@@ -69,6 +75,6 @@ stateDiagram-v2
 
 ## 與其他 skill 的關係
 
-- `/new-feature`：實作時以 SPEC.md 的 Must 範圍為準，不額外擴充。
+- `/new-feature`：實作時以 `docs/PRD-<slug>.md` 的 Must 範圍為準，不額外擴充。
 - `/add-tests`：每條 AC 與 EC 至少對應一個測試。
-- `/showcase-review`：檢查時對照 SPEC.md，列出未完成的 AC。
+- `/showcase-review`：檢查時對照 `docs/PRD-<slug>.md`，列出未完成的 AC。
