@@ -19,3 +19,4 @@
 | [PRD-cart-sync.md](./PRD-cart-sync.md) | 跨分頁購物車 | Draft |
 | [PRD-booking-slots.md](./PRD-booking-slots.md) | 預約時段選擇器 | Draft |
 | [PRD-split-bill.md](./PRD-split-bill.md) | 聚餐分帳 | Draft |
+| [PRD-avatar-cropper.md](./PRD-avatar-cropper.md) | 大頭貼上傳裁切 | Draft |
