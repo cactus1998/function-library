@@ -1,21 +1,43 @@
+/*
+ * 視覺語言參考 HackMD 筆記頁：zinc 灰階、紫色品牌色、
+ * Inter 內文 + Readex Pro 標題、Markdown 式的標題底線與 callout。
+ */
 :root {
-  --text: #5f5869;
-  --text-h: #08060d;
   --bg: #fff;
-  --surface: #f8f7fa;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #8a2be2;
-  --accent-bg: rgba(138, 43, 226, 0.08);
-  --accent-border: rgba(138, 43, 226, 0.45);
-  --danger: #c0262d;
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --bg-subtle: #fafafa;
+  --surface: #f4f4f5;
+  --border: #e4e4e7;
+  --border-strong: #d4d4d8;
+  --text: #3f3f46;
+  --text-muted: #71717a;
+  --text-h: #18181b;
+  --code-bg: #f4f4f5;
+  --badge-bg: #f4f4f5;
+  --badge-text: #52525b;
+  --accent: #564dff;
+  /* 實心按鈕底色：兩種主題都用品牌紫，確保白字對比 */
+  --accent-solid: #564dff;
+  --accent-solid-hover: #4038e0;
+  --accent-bg: rgba(86, 77, 255, 0.08);
+  --accent-border: rgba(86, 77, 255, 0.4);
+  --on-accent: #fff;
+  --info: #0284c7;
+  --info-bg: rgba(56, 189, 248, 0.1);
+  --danger: #dc2626;
+  --danger-bg: rgba(239, 68, 68, 0.1);
 
-  --sans: system-ui, 'Segoe UI', Roboto, 'Noto Sans TC', sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --radius: 4px;
+  --radius-lg: 8px;
+  --container: 1080px;
+  --gutter: 1rem;
+  --nav-height: 50px;
 
-  font: 16px/1.55 var(--sans);
+  --sans: Inter, system-ui, -apple-system, 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei',
+    'Noto Sans TC', sans-serif;
+  --display: 'Readex Pro', var(--sans);
+  --mono: SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+
+  font: 16px/1.75 var(--sans);
   color-scheme: light dark;
   color: var(--text);
   background: var(--bg);
@@ -27,18 +49,24 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --text: #a8aeb8;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --surface: #1d1e25;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.14);
-    --accent-border: rgba(192, 132, 252, 0.5);
+    --bg: #27272a;
+    --bg-subtle: #2c2c30;
+    --surface: #303036;
+    --border: #3f3f46;
+    --border-strong: #52525b;
+    --text: #d4d4d8;
+    --text-muted: #a1a1aa;
+    --text-h: #f4f4f5;
+    --code-bg: #3f3f46;
+    --badge-bg: #3f3f46;
+    --badge-text: #d4d4d8;
+    --accent: #9894f9;
+    --accent-bg: rgba(152, 148, 249, 0.12);
+    --accent-border: rgba(152, 148, 249, 0.5);
+    --info: #38bdf8;
+    --info-bg: rgba(56, 189, 248, 0.1);
     --danger: #f87171;
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+    --danger-bg: rgba(248, 113, 113, 0.12);
   }
 }
 
@@ -50,29 +78,31 @@
 
 body {
   margin: 0;
+  background: var(--bg);
 }
 
 h1,
 h2,
 h3 {
-  font-weight: 600;
+  font-family: var(--display);
+  font-weight: 700;
   line-height: 1.25;
   color: var(--text-h);
 }
 
 h1 {
   font-size: 1.75rem;
-  margin: 0 0 0.5rem;
+  margin: 0 0 1rem;
 }
 
 h2 {
-  font-size: 1.25rem;
-  margin: 0 0 0.5rem;
+  font-size: 1.375rem;
+  margin: 0 0 1rem;
 }
 
 h3 {
-  font-size: 1rem;
-  margin: 0 0 0.25rem;
+  font-size: 1.0625rem;
+  margin: 0 0 0.5rem;
 }
 
 p {
@@ -81,15 +111,35 @@ p {
 
 a {
   color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+code,
+kbd {
+  font-family: var(--mono);
+  font-size: 0.85em;
 }
 
 code {
-  font-family: var(--mono);
-  font-size: 0.875em;
-  padding: 0.1em 0.35em;
-  border-radius: 4px;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
   color: var(--text-h);
   background: var(--code-bg);
+}
+
+kbd {
+  display: inline-block;
+  padding: 0.1em 0.4em;
+  line-height: 1.2;
+  color: var(--text-h);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 var(--border-strong);
+  background: var(--bg-subtle);
 }
 
 button,
@@ -104,14 +154,48 @@ select {
   outline-offset: 2px;
 }
 
+::selection {
+  background: var(--accent-bg);
+}
+
 #app {
-  width: 1126px;
-  max-width: 100%;
   min-height: 100svh;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  border-inline: 1px solid var(--border);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* HackMD 的小標籤（筆記標題旁的 tag） */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.4rem;
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  white-space: nowrap;
+  border-radius: 3px;
+  color: var(--badge-text);
+  background: var(--badge-bg);
+}
+
+/* Markdown callout，對應 HackMD 的 :::info / :::danger */
+.callout {
+  padding: 0.875rem 1rem;
+  border-radius: var(--radius);
+  font-size: 0.9375rem;
+  color: var(--info);
+  background: var(--info-bg);
+}
+
+.callout.danger {
+  color: var(--danger);
+  background: var(--danger-bg);
 }
 
 .visually-hidden {
@@ -127,8 +211,12 @@ select {
 }
 
 @media (min-width: 768px) {
+  :root {
+    --gutter: 1.5rem;
+  }
+
   h1 {
-    font-size: 2.25rem;
+    font-size: 2rem;
   }
 }
 

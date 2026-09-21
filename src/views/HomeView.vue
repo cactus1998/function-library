@@ -1,14 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { RouterLink, useRoute, useRouter, type LocationQueryValue } from 'vue-router'
+import DifficultyMeter from '../components/DifficultyMeter.vue'
 import { features } from '../features/registry'
-import type { Difficulty } from '../features/types'
-
-const DIFFICULTY_LABEL: Record<Difficulty, string> = {
-  basic: '基礎',
-  intermediate: '中階',
-  advanced: '進階',
-}
 
 const route = useRoute()
 const router = useRouter()
@@ -43,6 +37,12 @@ const visibleFeatures = computed(() => {
   return features.filter((f) => selected.every((t) => f.tags.includes(t)))
 })
 
+const lastUpdated = features[0]?.createdAt
+
+// 編號依建立順序固定，不受篩選影響
+const orderOf = new Map(features.map((f, i) => [f.slug, features.length - i]))
+const formatOrder = (slug: string) => String(orderOf.get(slug) ?? 0).padStart(2, '0')
+
 function setTags(tags: string[]) {
   void router.replace({
     query: { ...route.query, tags: tags.length > 0 ? tags.join(',') : undefined },
@@ -56,172 +56,276 @@ function toggleTag(tag: string) {
 </script>
 
 <template>
-  <section class="home" aria-labelledby="home-title">
-    <h1 id="home-title">功能集</h1>
-    <p class="lead">
-      每個功能是一個獨立、可互動的前端技術展示，附上設計取捨與實作重點。
+  <section class="home container" aria-labelledby="home-title">
+    <p class="infobar">
+      <span>{{ features.length }} 個功能</span>
+      <span v-if="lastUpdated">更新於 <time :datetime="lastUpdated">{{ lastUpdated }}</time></span>
     </p>
 
-    <div v-if="allTags.length > 0" class="filters" role="group" aria-label="依標籤篩選">
-      <button
-        v-for="{ tag, count } in allTags"
-        :key="tag"
-        type="button"
-        class="chip"
-        :aria-pressed="selectedTags.includes(tag)"
-        @click="toggleTag(tag)"
-      >
-        {{ tag }} <span class="chip-count">{{ count }}</span>
-      </button>
-      <button
-        v-if="selectedTags.length > 0"
-        type="button"
-        class="clear"
-        @click="setTags([])"
-      >
-        清除篩選
-      </button>
+    <h1 id="home-title">功能集</h1>
+    <p class="lead">
+      一組可獨立操作的前端實作，每個都附上規格、測試與設計取捨。點進去切換參數、看即時數據。
+    </p>
+
+    <div class="toolbar">
+      <div v-if="allTags.length > 0" class="filters" role="group" aria-label="依標籤篩選">
+        <span class="filter-label" aria-hidden="true">標籤</span>
+        <button
+          v-for="{ tag, count } in allTags"
+          :key="tag"
+          type="button"
+          class="chip"
+          :aria-pressed="selectedTags.includes(tag)"
+          @click="toggleTag(tag)"
+        >
+          {{ tag }}<span class="chip-count">{{ count }}</span>
+        </button>
+        <button v-if="selectedTags.length > 0" type="button" class="clear" @click="setTags([])">
+          清除
+        </button>
+      </div>
+      <p class="result" aria-live="polite">
+        顯示 {{ visibleFeatures.length }} / {{ features.length }}
+      </p>
     </div>
 
-    <p class="result" aria-live="polite">共 {{ visibleFeatures.length }} 個功能</p>
-
-    <ul v-if="visibleFeatures.length > 0" class="grid">
+    <ol v-if="visibleFeatures.length > 0" class="rows">
       <li v-for="feature in visibleFeatures" :key="feature.slug">
-        <RouterLink :to="`/features/${feature.slug}`" class="card">
-          <div class="card-head">
-            <h2>{{ feature.title }}</h2>
-            <span class="difficulty" :data-level="feature.difficulty">
-              {{ DIFFICULTY_LABEL[feature.difficulty] }}
+        <RouterLink :to="`/features/${feature.slug}`" class="row">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16">
+              <path d="M4 1.5h5.5L13 5v9.5H4z" />
+              <path d="M9.5 1.5V5H13M6 8h5M6 10.5h5" />
+            </svg>
+          </span>
+          <span class="main-col">
+            <span class="title-line">
+              <span class="order">{{ formatOrder(feature.slug) }}</span>
+              <span class="title">{{ feature.title }}</span>
             </span>
-          </div>
-          <p class="summary">{{ feature.summary }}</p>
-          <ul class="tags" aria-label="標籤">
-            <li v-for="tag in feature.tags" :key="tag">{{ tag }}</li>
-          </ul>
+            <span class="summary">{{ feature.summary }}</span>
+            <span class="meta">
+              <span class="visually-hidden">標籤：</span>
+              <span v-for="tag in feature.tags" :key="tag" class="badge">{{ tag }}</span>
+              <DifficultyMeter class="level" :level="feature.difficulty" />
+              <time class="date" :datetime="feature.createdAt">{{ feature.createdAt }}</time>
+            </span>
+          </span>
         </RouterLink>
       </li>
-    </ul>
-    <p v-else class="empty">沒有符合所有標籤的功能，試著減少篩選條件。</p>
+    </ol>
+    <div v-else class="callout empty">
+      <p>沒有同時符合這些標籤的功能。</p>
+      <button type="button" class="clear" @click="setTags([])">清除篩選</button>
+    </div>
   </section>
 </template>
 
 <style scoped>
+.home {
+  max-width: 880px;
+  padding-top: 1rem;
+}
+
+.infobar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+h1 {
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--border-strong);
+}
+
 .lead {
   max-width: 40rem;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  margin-top: 2rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
 }
 
 .filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 1.5rem;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.filter-label {
+  margin-right: 0.25rem;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
 }
 
 .chip,
 .clear {
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  height: 1.625rem;
+  padding: 0 0.5rem;
+  font-size: 0.8125rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
   cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.chip {
+  color: var(--badge-text);
+  background: var(--badge-bg);
+}
+
+.chip:hover {
+  border-color: var(--border-strong);
 }
 
 .chip[aria-pressed='true'] {
-  color: var(--accent);
-  background: var(--accent-bg);
-  border-color: var(--accent-border);
+  color: var(--on-accent);
+  background: var(--accent-solid);
 }
 
 .chip-count {
-  font-size: 0.8em;
-  opacity: 0.7;
+  font-size: 0.75rem;
+  opacity: 0.65;
 }
 
 .clear {
-  border-style: dashed;
+  color: var(--accent);
+  background: transparent;
+}
+
+.clear:hover {
+  text-decoration: underline;
 }
 
 .result {
-  margin-top: 1rem;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
-  gap: 1rem;
-  margin: 0.75rem 0 0;
+.rows {
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.card {
+.rows li {
+  border-bottom: 1px solid var(--border);
+}
+
+.row {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  height: 100%;
-  padding: 1rem;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  gap: 0.875rem;
+  padding: 1rem 0.5rem;
   color: inherit;
   text-decoration: none;
-  transition:
-    box-shadow 0.2s,
-    border-color 0.2s;
+  transition: background-color 0.15s;
 }
 
-.card:hover {
-  border-color: var(--accent-border);
-  box-shadow: var(--shadow);
+.row:hover {
+  text-decoration: none;
+  background: var(--bg-subtle);
 }
 
-.card-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0.5rem;
-}
-
-.card-head h2 {
-  margin: 0;
-  font-size: 1.125rem;
-}
-
-.difficulty {
+.icon {
+  display: grid;
   flex-shrink: 0;
-  font-size: 0.75rem;
-  padding: 0.1rem 0.5rem;
-  border-radius: 4px;
-  background: var(--surface);
-}
-
-.difficulty[data-level='advanced'] {
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius);
   color: var(--accent);
   background: var(--accent-bg);
 }
 
-.summary {
-  flex: 1;
-  font-size: 0.9375rem;
+.icon svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.25;
+  stroke-linejoin: round;
 }
 
-.tags {
+.main-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.title-line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  line-height: 2rem;
+}
+
+.order {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.title {
+  font-family: var(--display);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.row:hover .title {
+  color: var(--accent);
+}
+
+.summary {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.meta {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.25rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: 0.75rem;
+  margin-top: 0.375rem;
 }
 
-.tags li {
-  padding: 0 0.4rem;
-  border-radius: 4px;
-  background: var(--code-bg);
+.level {
+  margin-left: 0.5rem;
+  color: var(--text-muted);
+}
+
+.date {
+  margin-left: 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
 }
 
 .empty {
-  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.empty .clear {
+  padding: 0;
+  height: auto;
 }
 </style>

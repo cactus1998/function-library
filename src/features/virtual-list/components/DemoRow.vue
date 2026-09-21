@@ -31,10 +31,11 @@ const { item, index, compact } = defineProps<{
 }
 
 .index {
-  flex: 0 0 4.5rem;
+  flex: 0 0 3.25rem;
   font-family: var(--mono);
-  font-size: 0.8125rem;
-  color: var(--accent);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
 }
 
 .content {

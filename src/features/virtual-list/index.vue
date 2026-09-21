@@ -99,66 +99,78 @@ function jump() {
 </script>
 
 <template>
-  <article class="virtual-list-demo">
+  <article class="virtual-list-demo container">
     <FeatureHeader :meta="meta" />
+
+    <h2 class="section-title">互動展示</h2>
 
     <form class="controls" @submit.prevent="jump">
       <fieldset>
         <legend>渲染方式</legend>
-        <label><input v-model="renderMode" type="radio" value="virtual" /> 虛擬列表</label>
-        <label><input v-model="renderMode" type="radio" value="naive" /> 全量渲染</label>
+        <div class="segmented">
+          <label><input v-model="renderMode" type="radio" value="virtual" /><span>虛擬列表</span></label>
+          <label><input v-model="renderMode" type="radio" value="naive" /><span>全量渲染</span></label>
+        </div>
       </fieldset>
 
       <fieldset>
         <legend>列高</legend>
-        <label><input v-model="heightMode" type="radio" value="fixed" /> 固定 {{ FIXED_HEIGHT }}px</label>
-        <label><input v-model="heightMode" type="radio" value="dynamic" /> 動態</label>
+        <div class="segmented">
+          <label>
+            <input v-model="heightMode" type="radio" value="fixed" /><span>固定 {{ FIXED_HEIGHT }}px</span>
+          </label>
+          <label><input v-model="heightMode" type="radio" value="dynamic" /><span>動態</span></label>
+        </div>
       </fieldset>
 
       <fieldset>
         <legend>資料筆數</legend>
-        <label v-for="option in COUNT_OPTIONS" :key="option">
-          <input
-            v-model="count"
-            type="radio"
-            :value="option"
-            :disabled="renderMode === 'naive' && option > NAIVE_LIMIT"
-          />
-          {{ numberFormat.format(option) }}
-        </label>
+        <div class="segmented">
+          <label v-for="option in COUNT_OPTIONS" :key="option">
+            <input
+              v-model="count"
+              type="radio"
+              :value="option"
+              :disabled="renderMode === 'naive' && option > NAIVE_LIMIT"
+            />
+            <span class="num">{{ numberFormat.format(option) }}</span>
+          </label>
+        </div>
       </fieldset>
 
       <fieldset class="jump">
         <legend>跳到索引</legend>
-        <label>
-          <span class="visually-hidden">索引</span>
-          <input
-            v-model="jumpInput"
-            type="number"
-            inputmode="numeric"
-            class="jump-input"
-            :aria-invalid="jumpError !== ''"
-            aria-describedby="jump-error"
-          />
-        </label>
-        <label>
-          <span class="visually-hidden">對齊方式</span>
-          <select v-model="jumpAlign">
-            <option value="start">頂端</option>
-            <option value="center">置中</option>
-            <option value="end">底端</option>
-          </select>
-        </label>
-        <button type="submit" :disabled="count === 0">跳轉</button>
+        <div class="input-group">
+          <label>
+            <span class="visually-hidden">索引</span>
+            <input
+              v-model="jumpInput"
+              type="number"
+              inputmode="numeric"
+              class="jump-input"
+              :aria-invalid="jumpError !== ''"
+              aria-describedby="jump-error"
+            />
+          </label>
+          <label>
+            <span class="visually-hidden">對齊方式</span>
+            <select v-model="jumpAlign">
+              <option value="start">頂端</option>
+              <option value="center">置中</option>
+              <option value="end">底端</option>
+            </select>
+          </label>
+          <button type="submit" :disabled="count === 0">跳轉</button>
+        </div>
       </fieldset>
     </form>
 
     <p class="messages" aria-live="polite">
-      <span v-if="notice">{{ notice }}</span>
-      <span v-if="jumpError" id="jump-error" class="error">{{ jumpError }}</span>
+      <span v-if="notice" class="callout">{{ notice }}</span>
+      <span v-if="jumpError" id="jump-error" class="callout danger">{{ jumpError }}</span>
     </p>
 
-    <div class="stage">
+    <section class="panel" aria-label="列表與效能指標">
       <dl class="metrics" aria-label="效能指標">
         <div>
           <dt>FPS</dt>
@@ -216,114 +228,216 @@ function jump() {
             <DemoRow :item="item" :index="index" :compact="heightMode === 'fixed'" />
           </template>
         </NaiveList>
-        <p class="hint">
-          點一下列表後可用 <kbd>↑</kbd> <kbd>↓</kbd> <kbd>Home</kbd> <kbd>End</kbd>
-          <kbd>PageUp</kbd> <kbd>PageDown</kbd> 移動選取（虛擬列表模式）。
-        </p>
       </div>
-    </div>
+
+      <p class="hint">
+        <template v-if="renderMode === 'virtual'">
+          點選列表後可用 <kbd>↑</kbd> <kbd>↓</kbd> <kbd>Home</kbd> <kbd>End</kbd>
+          <kbd>PgUp</kbd> <kbd>PgDn</kbd> 移動選取
+        </template>
+        <template v-else>全量渲染僅作對照組，不支援鍵盤選取</template>
+      </p>
+    </section>
   </article>
 </template>
 
 <style scoped>
+.virtual-list-demo {
+  padding-top: 1rem;
+}
+
+.section-title {
+  max-width: 760px;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--border-strong);
+}
+
 .controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  align-items: flex-end;
+  gap: 1rem 1.5rem;
 }
 
 fieldset {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.25rem 0.75rem;
+  min-width: 0;
   margin: 0;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  padding: 0;
+  border: 0;
 }
 
 legend {
-  padding-inline: 0.25rem;
+  margin-bottom: 0.375rem;
+  padding: 0;
   font-size: 0.8125rem;
-  color: var(--text-h);
+  font-weight: 500;
+  color: var(--text-muted);
 }
 
-label {
+/* 仿 HackMD 編輯／並排／檢視切換的按鈕群組；保留原生 radio 維持鍵盤與輔助技術行為 */
+.segmented {
   display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.9375rem;
+  flex-wrap: wrap;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.segmented label {
+  position: relative;
+  display: inline-flex;
+}
+
+.segmented label + label {
+  border-left: 1px solid var(--border-strong);
+}
+
+.segmented input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.segmented span {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
   white-space: nowrap;
+  color: var(--text);
+  transition:
+    background-color 0.15s,
+    color 0.15s;
 }
 
-label:has(input:disabled) {
-  opacity: 0.5;
+.segmented .num {
+  font-variant-numeric: tabular-nums;
 }
 
-.jump-input {
-  width: 7rem;
+.segmented label:hover span {
+  background: var(--bg-subtle);
 }
 
-.jump button,
-.jump input,
-.jump select {
-  padding: 0.2rem 0.5rem;
-  border: 1px solid var(--border);
-  border-radius: 6px;
+.segmented input:checked + span {
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.segmented input:focus-visible + span {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.segmented input:disabled,
+.segmented input:disabled + span {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.input-group {
+  display: inline-flex;
+  gap: 0.375rem;
+}
+
+.input-group input,
+.input-group select {
+  height: 2rem;
+  padding: 0 0.625rem;
+  font-size: 0.875rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
   background: var(--bg);
 }
 
-.jump button {
-  cursor: pointer;
-  color: var(--accent);
-  border-color: var(--accent-border);
+.jump-input {
+  width: 6.5rem;
+  font-variant-numeric: tabular-nums;
 }
 
-.jump button:disabled {
+.jump-input[aria-invalid='true'] {
+  border-color: var(--danger);
+}
+
+.input-group button {
+  height: 2rem;
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--on-accent);
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--accent-solid);
+  cursor: pointer;
+}
+
+.input-group button:hover {
+  background: var(--accent-solid-hover);
+}
+
+.input-group button:disabled {
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: 0.4;
 }
 
 .messages {
-  min-height: 1.5rem;
-  margin: 0.5rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  min-height: 1rem;
+  margin: 1rem 0;
+}
+
+.messages .callout {
+  padding: 0.375rem 0.75rem;
   font-size: 0.875rem;
 }
 
-.error {
-  color: var(--danger);
+.panel {
+  --list-height: 60vh;
+  --list-border: 0;
+  --list-radius: 0;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--bg);
 }
 
-.stage {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
+/* 指標列比照 Markdown 表格：表頭粗體、欄位以線分隔 */
 .metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.5rem;
   margin: 0;
+  border-bottom: 1px solid var(--border-strong);
 }
 
 .metrics div {
-  padding: 0.5rem 0.75rem;
-  border-radius: 8px;
-  background: var(--surface);
+  padding: 0.375rem 0.8125rem;
+  border-right: 1px solid var(--border-strong);
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.metrics div:nth-child(3n) {
+  border-right: 0;
+}
+
+.metrics div:nth-last-child(-n + 3) {
+  border-bottom: 0;
 }
 
 .metrics dt {
   font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-h);
 }
 
 .metrics dd {
   margin: 0;
   font-family: var(--mono);
-  font-size: 1.125rem;
-  color: var(--text-h);
+  font-size: 0.875rem;
+  color: var(--text);
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .metrics dd.warn {
@@ -331,37 +445,38 @@ label:has(input:disabled) {
 }
 
 .list-area {
-  --list-height: 60vh;
   min-width: 0;
 }
 
 .hint {
-  margin-top: 0.5rem;
+  padding: 0.5rem 0.8125rem;
   font-size: 0.8125rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-strong);
+  background: var(--bg-subtle);
 }
 
-kbd {
-  font-family: var(--mono);
+.hint kbd {
   font-size: 0.75rem;
-  padding: 0 0.3rem;
-  border: 1px solid var(--border);
-  border-radius: 4px;
 }
 
 @media (min-width: 900px) {
-  .stage {
-    flex-direction: row;
-    align-items: flex-start;
+  .panel {
+    --list-height: 560px;
   }
 
   .metrics {
-    flex: 0 0 11rem;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 
-  .list-area {
-    --list-height: 560px;
-    flex: 1;
+  .metrics div,
+  .metrics div:nth-child(3n) {
+    border-right: 1px solid var(--border-strong);
+    border-bottom: 0;
+  }
+
+  .metrics div:last-child {
+    border-right: 0;
   }
 }
 </style>

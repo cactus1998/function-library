@@ -54,8 +54,8 @@ defineExpose({ scrollToIndex })
   padding: 0;
   overflow-y: auto;
   list-style: none;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  border: var(--list-border, 1px solid var(--border));
+  border-radius: var(--list-radius, var(--radius));
   background: var(--bg);
 }
 

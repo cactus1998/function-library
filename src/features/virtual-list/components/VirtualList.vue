@@ -129,8 +129,8 @@ defineExpose({
   overflow-y: auto;
   /* 由程式自行補償 scrollTop，關閉瀏覽器的 scroll anchoring 避免兩者互相干擾 */
   overflow-anchor: none;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  border: var(--list-border, 1px solid var(--border));
+  border-radius: var(--list-radius, var(--radius));
   background: var(--bg);
 }
 
