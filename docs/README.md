@@ -16,3 +16,4 @@
 | [PRD-virtual-list.md](./PRD-virtual-list.md) | 虛擬列表 | Done |
 | [PRD-command-palette.md](./PRD-command-palette.md) | 指令面板 | Draft |
 | [PRD-kanban-board.md](./PRD-kanban-board.md) | 拖放看板 | Draft |
+| [PRD-cart-sync.md](./PRD-cart-sync.md) | 跨分頁購物車 | Draft |
