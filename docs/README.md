@@ -18,3 +18,4 @@
 | [PRD-kanban-board.md](./PRD-kanban-board.md) | 拖放看板 | Draft |
 | [PRD-cart-sync.md](./PRD-cart-sync.md) | 跨分頁購物車 | Draft |
 | [PRD-booking-slots.md](./PRD-booking-slots.md) | 預約時段選擇器 | Draft |
+| [PRD-split-bill.md](./PRD-split-bill.md) | 聚餐分帳 | Draft |
