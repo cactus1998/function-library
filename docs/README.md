@@ -15,3 +15,4 @@
 | [PRD-function-library.md](./PRD-function-library.md) | 功能集：面試用前端技術展示庫 | Draft |
 | [PRD-virtual-list.md](./PRD-virtual-list.md) | 虛擬列表 | Done |
 | [PRD-command-palette.md](./PRD-command-palette.md) | 指令面板 | Draft |
+| [PRD-kanban-board.md](./PRD-kanban-board.md) | 拖放看板 | Draft |
