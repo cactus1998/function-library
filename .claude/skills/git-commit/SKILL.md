@@ -17,7 +17,7 @@ description: Git Commit 流程（Vue 版）：執行型別檢查與測試預檢�
 ### 1. 檢查狀態
 
 1. 執行 `git status` 與 `git branch --show-current`。
-2. 目前在 `main` / `master` 且專案已有 remote 協作時，詢問是否先開新分支；個人專案直接在主分支 commit 也可以，由使用者決定。
+2. 本專案為個人專案，只用單一分支：一律直接 commit 在目前分支，不論分支名稱為何，不詢問、不開新分支，也不在回報中提及分支選擇。
 
 ### 2. 預檢
 
