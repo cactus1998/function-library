@@ -1,7 +1,14 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 import { RouterLink, useRoute, useRouter, type LocationQueryValue } from 'vue-router'
 import DifficultyMeter from '../components/DifficultyMeter.vue'
+import PaginationBar from '../components/PaginationBar.vue'
+import {
+  DEFAULT_PAGE_SIZE,
+  isPageSize,
+  usePagination,
+  type PageSize,
+} from '../composables/usePagination'
 import { features } from '../features/registry'
 
 const route = useRoute()
@@ -37,6 +44,25 @@ const visibleFeatures = computed(() => {
   return features.filter((f) => selected.every((t) => f.tags.includes(t)))
 })
 
+function parsePositiveInt(value: LocationQueryValue | LocationQueryValue[] | undefined): number {
+  const raw = Array.isArray(value) ? value[0] : value
+  const n = typeof raw === 'string' ? Number.parseInt(raw, 10) : NaN
+  return Number.isFinite(n) && n > 0 ? n : NaN
+}
+
+// 分頁狀態同樣放在 URL query，非法值退回預設
+const pageSize = computed<PageSize>(() => {
+  const n = parsePositiveInt(route.query.size)
+  return isPageSize(n) ? n : DEFAULT_PAGE_SIZE
+})
+const requestedPage = computed(() => parsePositiveInt(route.query.page) || 1)
+
+const { total, totalPages, currentPage, startIndex, endIndex, pageItems } = usePagination(
+  visibleFeatures,
+  requestedPage,
+  pageSize,
+)
+
 const lastUpdated = features[0]?.createdAt
 
 // 編號依建立順序固定，不受篩選影響
@@ -44,8 +70,30 @@ const orderOf = new Map(features.map((f, i) => [f.slug, features.length - i]))
 const formatOrder = (slug: string) => String(orderOf.get(slug) ?? 0).padStart(2, '0')
 
 function setTags(tags: string[]) {
+  // 篩選條件改變時回到第一頁
   void router.replace({
-    query: { ...route.query, tags: tags.length > 0 ? tags.join(',') : undefined },
+    query: { ...route.query, tags: tags.length > 0 ? tags.join(',') : undefined, page: undefined },
+  })
+}
+
+const toolbar = useTemplateRef<HTMLElement>('toolbar')
+
+async function setPage(page: number) {
+  await router.push({ query: { ...route.query, page: page > 1 ? String(page) : undefined } })
+  // 換頁後若列表頂端已捲出畫面，捲回列表開頭
+  const el = toolbar.value
+  if (el && el.getBoundingClientRect().top < 0) el.scrollIntoView({ block: 'start' })
+}
+
+function setPageSize(size: PageSize) {
+  // 換每頁筆數時，保持目前第一筆仍在畫面上
+  const page = Math.floor(startIndex.value / size) + 1
+  void router.replace({
+    query: {
+      ...route.query,
+      size: size === DEFAULT_PAGE_SIZE ? undefined : String(size),
+      page: page > 1 ? String(page) : undefined,
+    },
   })
 }
 
@@ -67,7 +115,7 @@ function toggleTag(tag: string) {
       一組可獨立操作的前端實作，每個都附上規格、測試與設計取捨。點進去切換參數、看即時數據。
     </p>
 
-    <div class="toolbar">
+    <div ref="toolbar" class="toolbar">
       <div v-if="allTags.length > 0" class="filters" role="group" aria-label="依標籤篩選">
         <span class="filter-label" aria-hidden="true">標籤</span>
         <button
@@ -90,7 +138,7 @@ function toggleTag(tag: string) {
     </div>
 
     <ol v-if="visibleFeatures.length > 0" class="rows">
-      <li v-for="feature in visibleFeatures" :key="feature.slug">
+      <li v-for="feature in pageItems" :key="feature.slug">
         <RouterLink :to="`/features/${feature.slug}`" class="row">
           <span class="icon" aria-hidden="true">
             <svg viewBox="0 0 16 16">
@@ -118,6 +166,18 @@ function toggleTag(tag: string) {
       <p>沒有同時符合這些標籤的功能。</p>
       <button type="button" class="clear" @click="setTags([])">清除篩選</button>
     </div>
+
+    <PaginationBar
+      v-if="total > 0"
+      :page="currentPage"
+      :total-pages="totalPages"
+      :page-size="pageSize"
+      :total="total"
+      :start-index="startIndex"
+      :end-index="endIndex"
+      @update:page="setPage"
+      @update:page-size="setPageSize"
+    />
   </section>
 </template>
 
