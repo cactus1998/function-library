@@ -11,6 +11,19 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Readex+Pro:wght@500;600;700&display=swap"
     />
     <title>Function Library</title>
+    <script>
+      // 正式站在深層網址重新整理時，GitHub Pages 會回傳根目錄的 404.html，
+      // 它把原網址存進 sessionStorage 後導回這裡；router 啟動前先還原網址。
+      ;(function () {
+        try {
+          var target = sessionStorage.getItem('spa-redirect')
+          sessionStorage.removeItem('spa-redirect')
+          if (target && target.indexOf(location.pathname) === 0 && target !== location.pathname) {
+            history.replaceState(null, '', target)
+          }
+        } catch (e) {}
+      })()
+    </script>
   </head>
   <body>
     <div id="app"></div>
