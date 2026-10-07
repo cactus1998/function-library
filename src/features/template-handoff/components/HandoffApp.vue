@@ -140,6 +140,8 @@ function shortSrc(src: string) {
 <style scoped>
 .handoff {
   display: grid;
+  /* 預設 auto 欄寬會被 <pre> 的長行撐開整頁，改成 minmax(0, 1fr) 讓 <pre> 自己捲動 */
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
 }
 
@@ -249,6 +251,7 @@ legend {
 
 .code-panels {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.5rem;
 }
 
