@@ -56,7 +56,7 @@
 - `data/snippets.ts` 的 HTML 是手寫的，可能和元件實際輸出不同步。
 - 測試（`__tests__/`，32 個）以可手動觸發的 IntersectionObserver、matchMedia mock 與 fake timers，驗證自動播放在 hover／focus／背景分頁／減少動態時暫停、頁籤鍵盤操作、選單關閉與焦點還原，以及卸載時清掉計時器、observer 與 document listener。
 
-## 面試官可能追問
+## 延伸問題
 **Q: 不用 jQuery 外掛，輪播怎麼做滑動？**
 A: 交給 CSS scroll-snap。track 設 `overflow-x: auto` 和 `scroll-snap-type: x mandatory`，每張設 `scroll-snap-align: start`。這樣手機滑動、觸控板、滑鼠滾輪都是瀏覽器原生處理，慣性和回彈也是。JS 只負責按鈕換頁（`scrollTo`）和判斷目前第幾張。
 

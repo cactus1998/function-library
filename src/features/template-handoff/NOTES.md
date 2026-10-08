@@ -42,7 +42,7 @@
 - 標題字數用 `string.length` 計算，emoji 會算成 2 個字。可以改用 `Array.from(str).length` 或 `Intl.Segmenter`。
 - 測試（`__tests__/`，54 個）涵蓋跳脫、網址白名單（大小寫 `JaVaScRiPt:`、`//evil.com`、`data:text/html`）、日期、選填欄位、屬性逃逸，以及「所有示範情境都不會輸出 script、on* 屬性或 javascript: 網址」；元件層測試壞圖以捕獲階段替換、程式碼面板與預覽的 HTML 一致。
 
-## 面試官可能追問
+## 延伸問題
 **Q: 用 v-html 不是很危險嗎？**
 A: 危險的是把沒跳脫的資料丟進去。我的字串是自己產生的，每個欄位都經過 `escapeHtml`，網址另外檢查協定。等於是把「後端模板引擎的自動跳脫」這件事在前端做一次。如果資料本身就是 HTML（例如後台富文字編輯器），就不能只靠跳脫，要用 DOMPurify 之類的 sanitizer。
 

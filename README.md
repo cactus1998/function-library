@@ -1,6 +1,13 @@
 # Function Library
 
-面試用的前端技術展示庫。把常見的前端難題拆成獨立、可互動的小型展示（feature demo），每個展示聚焦少數幾個技術點，搭配設計說明與測試，讓人在幾分鐘內看到實作品質。
+![Static Badge](https://img.shields.io/badge/Vue3-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D) 
+![Static Badge](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) 
+![Static Badge](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) 
+![Static Badge](https://img.shields.io/badge/Pinia-FFD859?style=for-the-badge&logo=pinia&logoColor=black) 
+![Static Badge](https://img.shields.io/badge/Vue%20Router-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D) 
+![Static Badge](https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white) 
+
+前端技術展示庫。把常見的前端難題拆成獨立、可互動的小型展示（feature demo），每個展示聚焦少數幾個技術點，搭配設計說明與測試，讓人在幾分鐘內看到實作品質。
 
 技術棧：Vue 3（`<script setup>`）、TypeScript、Vite、Pinia、vue-router、Vitest。
 
@@ -88,16 +95,13 @@ docs/                      # 專案與各功能的 PRD
 
 ## 開發流程
 
-專案在 `.claude/skills/` 內附有 Claude Code 技能，對應一個功能從規劃到面試準備的流程：
+專案在 `.claude/skills/` 內附有 Claude Code 技能，對應一個功能從規劃到提交的流程：
 
 | 指令 | 用途 |
 | --- | --- |
-| `/feature-ideas` | 依目標職位推薦下一個要做的功能 |
 | `/feature-spec <功能>` | 撰寫 `docs/PRD-<slug>.md`，含 Given-When-Then 驗收標準 |
 | `/new-feature <名稱>` | 建立功能資料夾、元件、meta 與路由 |
 | `/add-tests <slug>` | 補上單元與元件測試 |
-| `/showcase-review <slug>` | 檢查型別、邊界狀態、無障礙、記憶體洩漏與 RWD |
-| `/interview-notes <slug>` | 產生面試講稿 `NOTES.md` |
 | `/git-commit` | 型別檢查與測試通過後，以繁體中文 Angular 規範提交 |
 
 ## 設計原則

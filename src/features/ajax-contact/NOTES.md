@@ -1,7 +1,7 @@
 # Ajax 表單與分頁列表
 
 ## 30 秒電梯簡報
-我用原生 `fetch` 做了聯絡表單和留言分頁，沒有用 axios。重點在失敗處理：逾時、斷線、5xx、422 欄位錯誤、切頁時的競態都有處理。GET 失敗時用指數退避自動重試；POST 不自動重試，手動重試時帶同一個 `Idempotency-Key`，就算上一次其實已經送達也不會重複留言。頁面上可以切換伺服器狀態，旁邊有一個仿 DevTools 的 Network 面板，面試時可以現場重現每一種失敗。
+我用原生 `fetch` 做了聯絡表單和留言分頁，沒有用 axios。重點在失敗處理：逾時、斷線、5xx、422 欄位錯誤、切頁時的競態都有處理。GET 失敗時用指數退避自動重試；POST 不自動重試，手動重試時帶同一個 `Idempotency-Key`，就算上一次其實已經送達也不會重複留言。頁面上可以切換伺服器狀態，旁邊有一個仿 DevTools 的 Network 面板，可以現場重現每一種失敗。
 
 ## 問題背景
 - 很多人以為 `fetch` 失敗會進 `catch`，但 `fetch` 只有網路層失敗才 reject，404、500 仍會 resolve。沒檢查 `res.ok` 就會把錯誤頁當成資料。
@@ -47,7 +47,7 @@
 - mock 資料存在記憶體，重新整理就重置。
 - 測試（`__tests__/`，48 個）涵蓋 `requestJson` 的每種錯誤、逾時計時器清理、指數退避與抖動、重試上限、abort 中斷等待、mock server 的冪等與 504 後復原、分頁競態，以及表單驗證、422 對應、冪等 key 重用與取消。
 
-## 面試官可能追問
+## 延伸問題
 **Q: fetch 和 axios 差在哪？**
 A: 最大差別是錯誤處理：`fetch` 對 4xx／5xx 不會 reject，axios 會。`fetch` 沒有內建逾時，axios 有 `timeout`。`fetch` 要自己 `JSON.stringify` 和設 `Content-Type`。這些我都在 `requestJson` 裡補上了。取消的話，兩者現在都用 `AbortController`。
 

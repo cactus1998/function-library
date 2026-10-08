@@ -37,7 +37,7 @@
 |------|----------|--------------|
 | 功能偵測 | User-Agent 判斷 | UA 可偽造、會過時；功能偵測直接問瀏覽器「你會不會」 |
 | 先寫 fallback，再用 `@supports` 疊原生寫法 | 先寫原生，用 `@supports not` 補 fallback | 很舊的瀏覽器連 `@supports` 都不認得，會跳過整個區塊；預設放 fallback 最保險 |
-| `:not(.fallback)` 強制開關 | 只在舊瀏覽器上手動測 | 手邊沒有舊瀏覽器也能驗證 fallback，面試時可以現場切 |
+| `:not(.fallback)` 強制開關 | 只在舊瀏覽器上手動測 | 手邊沒有舊瀏覽器也能驗證 fallback，展示時可以現場切 |
 | 「沒處理」用靜態模擬 | 真的載入舊瀏覽器截圖 | 截圖不能互動、會過時；模擬的版本能說明問題的樣子 |
 | 前綴交給 Autoprefixer | 手寫 `-webkit-` | 依 `browserslist` 自動補，不會漏也不會多 |
 
@@ -46,7 +46,7 @@
 - `detectFlexGap()` 會插入元素並讀 `scrollHeight`，觸發一次同步 layout（forced reflow）。`SupportTable.vue` 和 `CompatCases.vue` 各呼叫一次，共兩次。量很小，但可以快取結果。
 
 ## 已知限制與可延伸方向
-- 「沒處理」那一欄是模擬，不是真的舊瀏覽器畫面。面試時要講清楚，真正驗證要靠 BrowserStack 或實機。
+- 「沒處理」那一欄是模擬，不是真的舊瀏覽器畫面。要說清楚，真正驗證要靠 BrowserStack 或實機。
 - `100vh` 和 iOS 放大兩個案例只是示意：桌機無法重現工具列伸縮，也不會自動放大，只能用手機開。
 - `detectFlexGap()` 被呼叫兩次。可以包成模組層級的快取（第一次算完就存起來）。
 - Can I Use 的連結代稱有幾個是 `mdn-` 開頭的推測值，沒有逐一確認都能連到正確頁面。
@@ -54,7 +54,7 @@
 - 日期 fallback 欄位的 `id` 是寫死的，同一頁放兩個會重複。
 - 測試（`__tests__/`，17 個）mock `scrollHeight` 與 `CSS.supports` 驗證偵測邏輯，並測試 `CompatCase` 的原生／fallback 切換與 `SupportTable` 對偵測丟例外的容錯。實際 fallback 的視覺效果仍要在瀏覽器驗證。
 
-## 面試官可能追問
+## 延伸問題
 **Q: 遇到相容性問題，你的處理流程是什麼？**
 A: 先在 Can I Use 查支援度，再對照專案要支援的瀏覽器（看 `browserslist` 或 GA 的瀏覽器分佈）。需要支援就寫 fallback，結構是「預設 fallback，`@supports` 疊原生」。最後在實機或 BrowserStack 驗證。前綴交給 Autoprefixer。
 

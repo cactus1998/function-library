@@ -6,7 +6,7 @@ argument-hint: <功能名稱或描述>
 
 # 新增功能展示
 
-本專案是面試用的技術展示庫（Vue 3 + TypeScript + Vite + Pinia + vue-router）。每個功能都是獨立、可單獨展示的 demo，並且要能讓面試官一眼看出技術重點。
+本專案是前端技術展示庫（Vue 3 + TypeScript + Vite + Pinia + vue-router）。每個功能都是獨立、可單獨展示的 demo，並且要能讓人一眼看出技術重點。
 
 ## 目錄慣例
 
@@ -18,7 +18,7 @@ src/features/
     index.vue            # demo 進入點（路由載入這個元件）
     components/          # 只給此 feature 用的子元件（可選）
     composables/         # use* 邏輯，與 UI 分離，方便測試（可選）
-    NOTES.md             # 面試講稿（由 /interview-notes 產生）
+    NOTES.md             # 設計筆記
 ```
 
 - `slug` 使用 kebab-case，例如 `virtual-list`、`debounced-search`。
@@ -34,7 +34,7 @@ src/features/
    - `meta.ts`：填好 `FeatureMeta`。
    - `index.vue`：`<script setup lang="ts">`，頁首放標題與一句話說明，下方放可互動的 demo。
    - 可重用的邏輯抽成 `composables/useXxx.ts`，並明確標注型別。
-5. **品質要求（面試展示用，比一般專案嚴格）：**
+5. **品質要求（展示用，比一般專案嚴格）：**
    - 不使用 `any`；props / emits 用型別宣告（`defineProps<...>()`、`defineEmits<...>()`）。
    - 處理邊界狀態：空資料、載入中、錯誤、極端輸入。
    - 基本無障礙：語意化標籤、可用鍵盤操作、互動元素有 label / `aria-*`。
@@ -42,7 +42,7 @@ src/features/
    - 優先使用原生 API 與自己的實作；只有在展示整合能力時才加入第三方套件，且要先問使用者。
    - 樣式使用 scoped CSS，並支援窄螢幕。
 6. **驗證。** 執行 `npm run build`（內含 `vue-tsc -b` 型別檢查）。有錯誤就修到通過。
-7. **回報。** 列出新增的檔案、路由路徑，以及 2–3 個技術亮點。提醒使用者可以接著跑 `/interview-notes <slug>` 與 `/add-tests <slug>`。
+7. **回報。** 列出新增的檔案、路由路徑，以及 2–3 個技術亮點。提醒使用者可以接著跑 `/add-tests <slug>`。
 
 ## 基礎架構（首次才建立）
 
@@ -56,7 +56,7 @@ export interface FeatureMeta {
   title: string
   summary: string
   tags: string[]          // 例如 ['performance', 'composable', 'a11y']
-  highlights: string[]    // 面試時要強調的技術點
+  highlights: string[]    // 要強調的技術點
   difficulty: Difficulty
   createdAt: string       // YYYY-MM-DD
 }
