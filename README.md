@@ -22,7 +22,6 @@
 | 預約時段選擇器 | `/features/booking-slots` | 中等 | 不用日期套件處理時區與 DST、純函式時段計算、WAI-ARIA grid 日曆、409 衝突處理 |
 | 聚餐分帳 | `/features/split-bill` | 中等 | 整數金額與最大餘數法分配、貪婪結算、自寫遞迴下降算式解析器（不用 `eval`） |
 | 大頭貼上傳裁切 | `/features/avatar-cropper` | 中等 | 純函式縮放與邊界 clamp、雙指縮放、Canvas 壓縮到 200 KB 內、可取消與重試的上傳 |
-| 前端面試題庫 | `/features/interview-quiz` | 基礎 | 可注入亂數的 Fisher–Yates 洗牌、推導式狀態機、帶版本號的 localStorage 持久化 |
 
 每個功能的完整技術重點寫在各自的 `meta.ts` 的 `highlights`，也會顯示在展示頁上；需求與驗收標準見 [`docs/`](./docs/README.md)。
 
